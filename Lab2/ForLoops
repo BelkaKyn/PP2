@@ -1,0 +1,22 @@
+i = 1
+while i < 6:
+  print(i)
+  i += 1
+else:
+print("i is no longer less than 6")
+
+fruits = ["apple", "banana", "cherry"]
+for x in fruits:
+  if x == "banana":
+    continue
+print(x)
+
+for x in 
+range(6):
+print(x)
+
+fruits = ["apple", "banana", "cherry"]
+for x in fruits:
+  if x == "banana":
+    break
+print(x)
