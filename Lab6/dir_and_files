@@ -1,0 +1,32 @@
+import os
+
+def list_directories_and_files(path):
+    try:
+        if not os.path.exists(path):
+            print("The specified path does not exist.")
+            return
+        
+        directories = []
+        files = []
+        
+        for item in os.listdir(path):
+            full_path = os.path.join(path, item)
+            if os.path.isdir(full_path):
+                directories.append(item)
+            elif os.path.isfile(full_path):
+                files.append(item)
+        
+        print("Directories:")
+        for directory in directories:
+            print(directory)
+        
+        print("\nFiles:")
+        for file in files:
+            print(file)
+    
+    except Exception as e:
+        print("An error occurred:", e)
+
+path = "/path/to/your/directory"
+
+list_directories_and_files(path)
