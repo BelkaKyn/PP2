@@ -22,7 +22,7 @@ SCREEN_WIDTH = 400
 SCREEN_HEIGHT = 600
 SPEED = 5
 SCORE = 0
-
+ENEMY_SPEED = SPEED
 # Установка шрифтов
 font = pygame.font.SysFont("Verdana", 60)
 font_small = pygame.font.SysFont("Verdana", 20)
@@ -45,7 +45,7 @@ class Enemy(pygame.sprite.Sprite):
 
     def move(self):
         global SCORE
-        self.rect.move_ip(0, SPEED)
+        self.rect.move_ip(0, ENEMY_SPEED)
         if self.rect.top > 600:
             SCORE += 1
             self.rect.top = 0
@@ -94,6 +94,25 @@ class Coin(pygame.sprite.Sprite):
             self.rect.center = (random.randint(40, SCREEN_WIDTH - 30), 0)
 
 
+# Создание класса монет1
+class Coin1(pygame.sprite.Sprite):
+    def __init__(self, size=(50, 50)):
+        super().__init__()
+        self.image = pygame.image.load("coin1.png").convert_alpha()
+        if size == (50, 50):
+            self.image = pygame.transform.scale(self.image, (50, 50))
+            self.points = 3
+        self.rect = self.image.get_rect()
+        self.rect.center = (random.randint(40, SCREEN_WIDTH - 40), 0)
+
+    def move(self):
+        global SCORE
+        self.rect.move_ip(0, SPEED)
+        if self.rect.top > 600:
+            self.rect.top = 0
+            self.rect.center = (random.randint(40, SCREEN_WIDTH - 40), 0)
+
+
 # Создание спрайтов
 P1 = Player()
 E1 = Enemy()
@@ -107,6 +126,7 @@ all_sprites.add(E1)
 
 # Создание группы монет
 coins = pygame.sprite.Group()
+coins1 = pygame.sprite.Group()
 
 # Создание монет и добавление их в группу all_sprites
 for _ in range(2): 
@@ -114,7 +134,12 @@ for _ in range(2):
     coins.add(coin)
     all_sprites.add(coin)
 
-# Создание текстового объекта для отображения количества монет
+for _ in range(1): 
+    coin1 = Coin1()
+    coins1.add(coin1)
+    all_sprites.add(coin1)
+
+# Создание текста для отоброжения монеток
 coin_font = pygame.font.SysFont("Verdana", 20)
 coin_text = coin_font.render("Coins: 0", True, BLACK)
 coin_text_rect = coin_text.get_rect(topright=(SCREEN_WIDTH - 100, 10))
@@ -133,6 +158,11 @@ while True:
         coins.add(coin)
         all_sprites.add(coin)
 
+    for _ in range(1 - len(coins1)):  
+        coin1 = Coin1()
+        coins1.add(coin1)
+        all_sprites.add(coin1)
+
     # Очистка экрана
     DISPLAYSURF.blit(background, (0, 0))
 
@@ -149,7 +179,14 @@ while True:
         SCORE += coin.points
         coin_text = coin_font.render("Coins: {}".format(SCORE), True, BLACK)
 
-    # Проверка столкновений врагов с игроком
+    for coin1 in pygame.sprite.spritecollide(P1, coins1, True):
+        SCORE += coin1.points
+        coin_text = coin_font.render("Coins: {}".format(SCORE), True, BLACK)
+    
+    if SCORE % 10 == 0 and SCORE != 0:
+        ENEMY_SPEED += 0.01
+        
+    #   Проверка столкновений врагов с игроком
     if pygame.sprite.spritecollide(P1, enemies, False):
         DISPLAYSURF.blit(game_over_text, (30, 250))
         pygame.display.update()

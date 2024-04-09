@@ -15,7 +15,7 @@ dis_width = 600
 dis_height = 400
 
 dis = pygame.display.set_mode((dis_width, dis_height))
-pygame.display.set_caption('Snake Game by ')
+pygame.display.set_caption('Snake Game by BelkaKyn')
 
 clock = pygame.time.Clock()
 
@@ -31,21 +31,17 @@ levels = {
     3: 10
 }
 
-
 def Your_score(score):
     value = score_font.render("Your Score: " + str(score), True, yellow)
     dis.blit(value, [0, 0])
-
 
 def our_snake(snake_block, snake_list):
     for x in snake_list:
         pygame.draw.rect(dis, black, [x[0], x[1], snake_block, snake_block])
 
-
 def message(msg, color):
     mesg = font_style.render(msg, True, color)
     dis.blit(mesg, [dis_width / 6, dis_height / 3])
-
 
 def gameLoop():
     global snake_speed  # Добавляем эту строку для объявления переменной как глобальной
@@ -62,8 +58,10 @@ def gameLoop():
     snake_List = []
     Length_of_snake = 1
 
+    food_size = (10, 10)  # Размер еды
     foodx = round(random.randrange(0, dis_width - snake_block) / 10.0) * 10.0
     foody = round(random.randrange(0, dis_height - snake_block) / 10.0) * 10.0
+    food_timer = pygame.time.get_ticks()  # Время появления еды
 
     level = 1
     score = 0
@@ -107,7 +105,10 @@ def gameLoop():
         x1 += x1_change
         y1 += y1_change
         dis.fill(blue)
-        pygame.draw.rect(dis, green, [foodx, foody, snake_block, snake_block])
+        
+        # Отрисовка еды с учетом размера
+        pygame.draw.rect(dis, green, [foodx, foody, food_size[0], food_size[1]])
+        
         snake_Head = []
         snake_Head.append(x1)
         snake_Head.append(y1)
@@ -125,6 +126,7 @@ def gameLoop():
         pygame.display.update()
 
         if x1 == foodx and y1 == foody:
+            food_size = (random.choice([10, 15, 20]), random.choice([10, 15, 20]))  # Случайный размер еды
             foodx = round(random.randrange(0, dis_width - snake_block) / 10.0) * 10.0
             foody = round(random.randrange(0, dis_height - snake_block) / 10.0) * 10.0
             Length_of_snake += 1
@@ -132,11 +134,16 @@ def gameLoop():
             if score % 3 == 0:
                 level += 1
                 snake_speed = levels[level]
+        # Если прошло более 5 секунд, создаем новую еду
+        if pygame.time.get_ticks() - food_timer > 5000:
+            food_size = (random.randint(5, 20), random.randint(5, 20))  # Случайный размер еды
+            foodx = round(random.randrange(0, dis_width - snake_block) / 10.0) * 10.0
+            foody = round(random.randrange(0, dis_height - snake_block) / 10.0) * 10.0
+            food_timer = pygame.time.get_ticks()  # Обновляем таймер появления еды
 
         clock.tick(snake_speed)
 
     pygame.quit()
     quit()
-
 
 gameLoop()
