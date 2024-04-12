@@ -8,7 +8,7 @@ pygame.init()
 SCREEN_WIDTH = 1300
 SCREEN_HEIGHT = 1000
 screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
-pygame.display.set_caption("Микки Маус Часы")
+pygame.display.set_caption("Clock")
 
 # Цвета
 WHITE = (255, 255, 255)
@@ -19,23 +19,15 @@ minute_hand_image = pygame.image.load("minute_hand.png").convert_alpha()
 second_hand_image = pygame.image.load("second_hand.png").convert_alpha()
 clock_face_image = pygame.image.load("clock_face.png").convert_alpha()
 
-def rot_center(image, angle):
-    """Поворачивает изображение, сохраняя его центр и размер"""
-    # Получаем исходный прямоугольник изображения
-    orig_rect = image.get_rect()
-    # Поворачиваем изображение
-    rot_image = pygame.transform.rotate(image, angle)
-    # Получаем прямоугольник нового повернутого изображения
-    rot_rect = orig_rect.copy()
-    rot_rect.center = rot_image.get_rect().center
-    # Пересекаем прямоугольник повернутого изображения с прямоугольником исходного изображения
-    subsurf_rect = rot_rect.clip(image.get_rect())
-    return rot_image
+def blit_rotate_center(surf, image, topleft, angle):
+    """Поворачивает изображение вокруг его центра"""
+    rotated_image = pygame.transform.rotate(image, angle)
+    new_rect = rotated_image.get_rect(center=image.get_rect(topleft=topleft).center)
+    surf.blit(rotated_image, new_rect.topleft)
 
-
-# Основная функция отрисовки часов
 def draw_clock_hands():
-    # Получение текущего времени
+    """Отрисовывает часы на экране"""
+    # Получение времени
     current_time = datetime.now().time()
     seconds = current_time.second
     minutes = current_time.minute
@@ -44,25 +36,13 @@ def draw_clock_hands():
     seconds_angle = -(seconds / 60) * 360 + 90
     minutes_angle = -(minutes / 60) * 360 + 90
 
-    # Поворот и отрисовка стрелок
-    rotated_second_hand = rot_center(second_hand_image, seconds_angle)
-    rotated_minute_hand = rot_center(minute_hand_image, minutes_angle)
-    
-   
-
-    # Расчет позиций стрелок
-    second_hand_rect = rotated_second_hand.get_rect(center=(600, 450))
-    minute_hand_rect = rotated_minute_hand.get_rect(center=(600, 300))
-
-
     # Отрисовка фона часов
     screen.blit(clock_face_image, (0, 0))
 
     # Отрисовка стрелок
-    screen.blit(rotated_second_hand, second_hand_rect)
-    screen.blit(rotated_minute_hand, minute_hand_rect)
+    blit_rotate_center(screen, second_hand_image, (500, 350), seconds_angle)
+    blit_rotate_center(screen, minute_hand_image, (540, 400), minutes_angle)
 
-# Основной цикл
 running = True
 while running:
     for event in pygame.event.get():
@@ -78,9 +58,7 @@ while running:
     # Обновление дисплея
     pygame.display.flip()
 
-    # Управление частотой кадров
     pygame.time.Clock().tick(60)
 
-# Завершение работы Pygame
 pygame.quit()
 sys.exit()
