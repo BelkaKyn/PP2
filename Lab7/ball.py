@@ -1,10 +1,8 @@
 import pygame
 import sys
 
-# Инициализация Pygame
 pygame.init()
 
-# Установка размеров экрана
 SCREEN_WIDTH, SCREEN_HEIGHT = 800, 600
 screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
 pygame.display.set_caption("Moving Ball")
@@ -19,7 +17,6 @@ ball_x = (SCREEN_WIDTH - ball_radius * 2) // 2
 ball_y = (SCREEN_HEIGHT - ball_radius * 2) // 2
 ball_speed = 20
 
-# Основной цикл программы
 running = True
 while running:
     # Обработка событий
@@ -40,15 +37,12 @@ while running:
                 if ball_x + ball_speed <= SCREEN_WIDTH - ball_radius * 2:
                     ball_x += ball_speed
 
-    # Очистка экрана
     screen.fill(WHITE)
 
     # Рисование шара
     pygame.draw.circle(screen, RED, (ball_x + ball_radius, ball_y + ball_radius), ball_radius)
 
-    # Обновление экрана
     pygame.display.flip()
 
-# Выход из Pygame
 pygame.quit()
 sys.exit()
