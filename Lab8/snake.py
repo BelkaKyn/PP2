@@ -24,7 +24,6 @@ snake_block = 10
 font_style = pygame.font.SysFont("bahnschrift", 25)
 score_font = pygame.font.SysFont("comicsansms", 35)
 
-# Уровни
 levels = {
     1: 15,
     2: 12,
@@ -67,7 +66,7 @@ def gameLoop():
 
     level = 1
     score = 0
-    snake_speed = 15  # Определение переменной перед использованием
+    snake_speed = 15  
 
     while not game_over:
 

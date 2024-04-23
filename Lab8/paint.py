@@ -1,50 +1,44 @@
 import pygame
 import sys
 
-# Инициализация Pygame
 pygame.init()
 
-# Цвета
+
 WHITE = (255, 255, 255)
 BLACK = (0, 0, 0)
 RED = (255, 0, 0)
 GREEN = (0, 255, 0)
 BLUE = (0, 0, 255)
 
-# Размеры экрана
 WIDTH, HEIGHT = 800, 600
 
-# Создание экрана и его заполнение белым цветом
 screen = pygame.display.set_mode((WIDTH, HEIGHT))
-screen.fill(WHITE)  # Заполнение экрана белым цветом
+screen.fill(WHITE)  
 pygame.display.set_caption("Simple Paint")
 
-# Параметры кисти
 brush_color = BLACK
 brush_size = 5
 drawing = False
 last_pos = None
 start_pos = None
-rectangle_mode = False  # Флаг режима рисования прямоугольника
-circle_mode = False  # Флаг режима рисования круга
-eraser_mode = False  # Флаг режима ластика
-
-# Основной цикл программы
+rectangle_mode = False  
+circle_mode = False  
+eraser_mode = False  
 while True:
-    # Обработка событий
+   
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             pygame.quit()
             sys.exit()
         elif event.type == pygame.MOUSEBUTTONDOWN:
-            if event.button == 1:  # Левая кнопка мыши для рисования
+            if event.button == 1:  
                 drawing = True
                 if rectangle_mode or circle_mode:
                     start_pos = event.pos
                 else:
                     last_pos = event.pos
         elif event.type == pygame.MOUSEBUTTONUP:
-            if event.button == 1:  # Отпустить левую кнопку мыши
+            if event.button == 1: 
                 drawing = False
                 if rectangle_mode:
                     rect_width = abs(event.pos[0] - start_pos[0])
@@ -56,35 +50,35 @@ while True:
         elif event.type == pygame.MOUSEMOTION:
             if drawing and not rectangle_mode and not circle_mode:
                 if eraser_mode:
-                    brush_color = WHITE  # Установка цвета кисти на белый для ластика
+                    brush_color = WHITE  
                 pygame.draw.line(screen, brush_color, last_pos, event.pos, brush_size)
                 last_pos = event.pos
         elif event.type == pygame.KEYDOWN:
-            if event.key == pygame.K_c:  # Переключение режима рисования круга по нажатии "C"
+            if event.key == pygame.K_c:  
                 circle_mode = not circle_mode
                 rectangle_mode = False
                 eraser_mode = False
-            elif event.key == pygame.K_f:  # Переключение режима рисования прямоугольника по нажатии "F"
+            elif event.key == pygame.K_f: 
                 rectangle_mode = not rectangle_mode
                 circle_mode = False
                 eraser_mode = False
-            elif event.key == pygame.K_e:  # Переключение режима ластика по нажатии "E"
+            elif event.key == pygame.K_e:  
                 eraser_mode = not eraser_mode
                 rectangle_mode = False
                 circle_mode = False
-            elif event.key == pygame.K_p:  # Изменить цвет кисти при нажатии "P"
+            elif event.key == pygame.K_p:  
                 brush_color = BLACK
-            elif event.key == pygame.K_r:  # Изменить цвет кисти при нажатии "R"
+            elif event.key == pygame.K_r:  
                 brush_color = RED
-            elif event.key == pygame.K_g:  # Изменить цвет кисти при нажатии "G"
+            elif event.key == pygame.K_g:  
                 brush_color = GREEN
-            elif event.key == pygame.K_b:  # Изменить цвет кисти при нажатии "B"
+            elif event.key == pygame.K_b:  
                 brush_color = BLUE
-            elif event.key == pygame.K_s:  # Уменьшить размер кисти при нажатии "S"
+            elif event.key == pygame.K_s:  
                 brush_size = max(1, brush_size - 1)
-            elif event.key == pygame.K_l:  # Увеличить размер кисти при нажатии "L"
+            elif event.key == pygame.K_l: 
                 brush_size += 1
 
-    # Обновление экрана
+   
     pygame.display.flip()
     

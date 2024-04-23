@@ -10,7 +10,6 @@ pygame.init()
 FPS = 60
 FramePerSec = pygame.time.Clock()
 
-# Создание цветов
 BLUE = (0, 0, 255)
 RED = (255, 0, 0)
 GREEN = (0, 255, 0)
@@ -163,7 +162,7 @@ while True:
         coins1.add(coin1)
         all_sprites.add(coin1)
 
-    # Очистка экрана
+    
     DISPLAYSURF.blit(background, (0, 0))
 
     # Отображение счетчика монет
@@ -184,7 +183,7 @@ while True:
         coin_text = coin_font.render("Coins: {}".format(SCORE), True, BLACK)
     
     if SCORE % 10 == 0 and SCORE != 0:
-        ENEMY_SPEED += 0.01
+        ENEMY_SPEED += 1
         
     #   Проверка столкновений врагов с игроком
     if pygame.sprite.spritecollide(P1, enemies, False):
